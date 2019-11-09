@@ -23,11 +23,11 @@ function Login(props) {
     api()
       .post("/api/login", data)
       .then(result => {
-        localStorage.setItem("token", result.data.token)
+        localStorage.setItem("token", result.data.payload)
 
-        //props.history.push("/account")
+        props.history.push("/bubbles")
       })
-      .catch(err => {
+      .catch(error => {
         setError(error.response.data.message)
       })
     }
