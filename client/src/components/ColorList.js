@@ -53,8 +53,23 @@ const ColorList = ({ colors, updateColors }) => {
         .catch(error => {
           throw error;
         })
+        window.location.reload(false);
     }
   };
+
+  const handleNewColor = (event) => {
+    event.preventDefault()
+
+    api()
+      .post("/api/colors", newColor)
+      .then(result => {
+        console.log(newColor)
+      })
+      .catch(error => {
+        throw(error)
+      })
+      window.location.reload(false);
+  }
 
   return (
     <div className="colors-wrap">
@@ -111,6 +126,17 @@ const ColorList = ({ colors, updateColors }) => {
       )}
       <div className="spacer" />
       {/* stretch - build another form here to add a color */}
+      <form onSubmit={handleNewColor}>
+        <label>
+          Color Name: 
+          <input onChange={event => 
+                  setNewColor({
+                    ...newColor,
+                    code: {hex: event.target.value}
+                  })}
+                 value={newColor.code.hex} />
+        </label>
+      </form>
     </div>
   );
 };
