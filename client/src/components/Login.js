@@ -18,27 +18,21 @@ function Login(props) {
 
 	const handleSubmit = (event) => {
     event.preventDefault()
-    
-
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
+    api()
+      .post("/api/login", data)
+      .then(result => {
+        localStorage.setItem("token", result.data.token)
 
-  api()
-    .post("/api/login", data)
-    .then(result => {
-      localStorage.setItem("token", result.data.token)
-
-      //props.history.push("/account")
-    })
-    .catch(err => {
-      setError(error.response.data.message)
-    })
-  }
+        //props.history.push("/account")
+      })
+      .catch(err => {
+        setError(error.response.data.message)
+      })
+    }
 
   return (
-    <div>
-      <h1>Welcome to the Bubble App!</h1>
-      <h2>Please Login</h2>
       <form onSubmit={handleSubmit}>
         {error && <div className="error">{error}</div>}
 
@@ -59,7 +53,6 @@ function Login(props) {
 
         <button type="submit">Sign In</button>
       </form>
-    </div>
     );
 };
 
