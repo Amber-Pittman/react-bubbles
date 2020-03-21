@@ -17,6 +17,9 @@ function App() {
         {/*  #4 Let's create a nav tag and create some links */}
         <nav>
           <Link to="/">Home</Link>
+
+          {/* #15 Add a Login Link to the Navigation */}
+          <Link to="/login">Login</Link>
         </nav>
 
         {/* #5 Define some routes */}
