@@ -5,7 +5,7 @@ export function getToken() {
 }
 
 
-export default function() {
+export default function axiosWithAuth () {
 	return axios.create({		
 		baseURL: "http://localhost:5000", 
 		headers: {
