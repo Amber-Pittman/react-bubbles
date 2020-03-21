@@ -1,7 +1,7 @@
 // #11 Import useState
 import React, { useState } from "react";
 // #20 Import axios api
-import api from "../utils/api";
+import axiosWithAuth from "../utils/axiosWithAuth";
 
 // #6 Create Signin Component
 const Login = () => {
@@ -10,7 +10,7 @@ const Login = () => {
 
   // #12 Set up some initial state
   const [data, setData] = useState({
-    email: "",
+    username: "",
     password: "",
   })
 
@@ -27,11 +27,13 @@ const Login = () => {
     event.preventDefault()
 
     // #19 We need to make an axios call. Instead of calling axios post, 
-    // we'll use api as a function in place of axios
-    api()
+    // we'll use axiosWithAuth as a function in place of axios
+    axiosWithAuth ()
       .post("/login", data)
       .then(result => {
+        console.log(result)
         localStorage.setItem("token", result.data.token)
+        //props.history.push("/bubbles")
       })
       .catch(err => {
         setError(err.response.data.message)
@@ -55,10 +57,10 @@ const Login = () => {
 
         {/* #10 Create some input fields and a button for the form */}
         <input
-          type="email"
-          autoComplete="email"
-          name="email"
-          placeholder="Email" 
+          type="username"
+          autoComplete="username"
+          name="username"
+          placeholder="Username" 
           // #14A Attach these values and the handleChange function to 
           //  each one of our inputs
           value={data.email}
