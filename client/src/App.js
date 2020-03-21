@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // #3 Define some routes by importing from rrd
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import BubblePage from "./components/BubblePage";
-import getToken from "./utils/axiosWithAuth";
+import { getToken } from "./utils/axiosWithAuth";
 import "./styles.scss";
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
             <h2 className="bubbles">Login for Color Bubbles!</h2>
           </div>
           <div>
-              <Link to="/">Home</Link>
+              <Link to="/" className="link">Login</Link>
 
                 {/* #15 Add a Login Link to the Navigation */}
                 {/* Ternary if not signed in, send to login} */}
@@ -37,7 +37,7 @@ function App() {
 
         {/* #5 Define some routes */}
         {/* #8 Add Login component to login Route */}
-        <Route exact path="/login" component={Login} />
+        <Route exact path="/" component={Login} />
         {/* 
           Build a PrivateRoute component that will 
           display BubblePage when you're authenticated 

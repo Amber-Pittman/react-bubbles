@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import axiosWithAuth from "../utils/axiosWithAuth";
 
 // #6 Create Signin Component
-const Login = () => {
+const Login = (props) => {
   // #16 Set up error state for error component/message
   const[error, setError] = useState()
 
@@ -29,15 +29,15 @@ const Login = () => {
     // #19 We need to make an axios call. Instead of calling axios post, 
     // we'll use axiosWithAuth as a function in place of axios
     axiosWithAuth ()
-      .post("/login", data)
+      .post("/api/login", data)
       .then(result => {
         console.log(result)
-        localStorage.setItem("token", result.data.token)
-        //props.history.push("/bubbles")
+        localStorage.setItem("token", result.data.payload)
+        props.history.push("/bubbles")
       })
       .catch(err => {
         setError(err.response.data.message)
-        throw(error)
+        //throw(error)
       })
   }
 
@@ -57,13 +57,13 @@ const Login = () => {
 
         {/* #10 Create some input fields and a button for the form */}
         <input
-          type="username"
+          type="text"
           autoComplete="username"
           name="username"
           placeholder="Username" 
           // #14A Attach these values and the handleChange function to 
           //  each one of our inputs
-          value={data.email}
+          value={data.username}
           onChange={handleChange}
         />
         
@@ -74,7 +74,7 @@ const Login = () => {
           placeholder="Password" 
           // #14B Attach these values and the handleChange function to 
           //  each one of our inputs
-          value={data.email}
+          value={data.password}
           onChange={handleChange}
           />
 
