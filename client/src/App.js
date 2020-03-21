@@ -19,10 +19,20 @@ function App() {
 
         {/*  #4 Let's create a nav tag and create some links */}
         <nav>
-          <Link to="/">Home</Link>
+          <div>
+            <h2 className="bubbles">Login for Color Bubbles!</h2>
+          </div>
+          <div>
+              <Link to="/">Home</Link>
 
-          {/* #15 Add a Login Link to the Navigation */}
-          <Link to="/login">Login</Link>
+                {/* #15 Add a Login Link to the Navigation */}
+                {/* Ternary if not signed in, send to login} */}
+              {!loggedIn && <Link to="/login">Login</Link> }
+
+                {/* Ternary if signed in, send to Bubbles Page} */}
+              {loggedIn && <Link to="/bubbles" className="link">
+                Bubbles</Link>}
+          </div>
         </nav>
 
         {/* #5 Define some routes */}
