@@ -1,43 +1,41 @@
-// #11 Import useState
-import React, { useState } from "react";
-// #20 Import axios api
-import axiosWithAuth from "../utils/axiosWithAuth";
+import React, { useState, useEffect } from "react";
+import { axiosWithAuth as axios } from "../utils/axiosWithAuth";
 
-// #6 Create Signin Component
 const Login = (props) => {
-  // #16 Set up error state for error component/message
-  const[error, setError] = useState()
+  const [error, setError] = useState()
 
-  // #12 Set up some initial state
   const [data, setData] = useState({
     username: "",
     password: "",
   })
 
-  // #13 Create handleChange function for the inputs
-  const handleChange = (event) => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      props.history.push("/bubbles")
+    }
+  })
+
+  const handleChange = event => {
     setData({
       ...data,
       [event.target.name]: event.target.value,
     })
   }
 
-  // #18 We need a handle submit function for our button
-  const handleSubmit= (event) => {
-    event.preventDefault()
+  const handleSubmit = event => {
+    event.preventDefault();
 
-    // #19 We need to make an axios call. Instead of calling axios post, 
-    // we'll use axiosWithAuth as a function in place of axios
-    axiosWithAuth ()
-      .post("/api/login", data)
-      .then(result => {
-        console.log(result)
-        localStorage.setItem("token", result.data.payload)
+    axios()
+      .post("http://localhost:5000/api/login", data)
+      .then(res => {
+        console.log(res)
+        localStorage.setItem("token", res.data.payload)
         props.history.push("/bubbles")
       })
       .catch(err => {
-        setError(err.response.data.message)
-        //throw(error)
+        console.log(err, "Error in axiosWithAuth on Login")
+        setError(err.res.data.message)
       })
   }
 
@@ -45,42 +43,43 @@ const Login = (props) => {
   // when you have handled the token, navigate to the BubblePage route
     
   return (
-    // #9 Return a form tag
-    // #21 Don't forget to add handleSubmit to the form!
-      <form onSubmit={handleSubmit}>
-        {/* #17 Inside the component, we can write a simple ternary that says
-			if error exists or something is in there that is undefined, show
-			a div with className of error, and display the error */}
-      {error && <div className="error">{error}</div>}
+    <div className="bubbleApp">
+      <h1>Welcome to the Bubble App!</h1>
+        <div>
+        <form onSubmit={handleSubmit}>
+          {error && <div className="error">{error}</div>}
 
-        <h1>Welcome to the Bubble App!</h1>
-
-        {/* #10 Create some input fields and a button for the form */}
-        <input
-          type="text"
-          autoComplete="username"
-          name="username"
-          placeholder="Username" 
-          // #14A Attach these values and the handleChange function to 
-          //  each one of our inputs
-          value={data.username}
-          onChange={handleChange}
-        />
+          <div className="loginForm">
+          
+          <label> Username:
+            <input
+              type="text"
+              autoComplete="username"
+              name="username"
+              placeholder="Username" 
+              value={data.username}
+              onChange={handleChange}
+            />
+          </label>
+          
+          <label> Password: 
+            <input
+              type="password"
+              autoComplete="current-password"
+              name="password"
+              placeholder="Password" 
+              value={data.password}
+              onChange={handleChange}
+              />
+            </label>
+          
+          <button className="button" type="submit">Login</button>
         
-        <input
-          type="password"
-          autoComplete="current-password"
-          name="password"
-          placeholder="Password" 
-          // #14B Attach these values and the handleChange function to 
-          //  each one of our inputs
-          value={data.password}
-          onChange={handleChange}
-          />
-
-        <button type="submit">Login</button>
+        </div>
       </form>
-    );
+    </div>
+  </div>
+  );
 };
 
 export default Login;

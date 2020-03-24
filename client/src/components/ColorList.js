@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 //import axios from "axios";
-import axiosWithAuth from "../utils/axiosWithAuth";
+import { axiosWithAuth as axios } from "../utils/axiosWithAuth";
 
 const initialColor = {
   color: "",
@@ -19,35 +19,42 @@ const ColorList = ({ colors, updateColors }) => {
   };
 
   const saveEdit = e => {
+    //console.log(saveEdit);
     e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
-    axiosWithAuth()
-      .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
-      .then(result => {
+    axios()
+      .put(`/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        console.log(res, "Console log of saveEdit res")
+        updateColors(colors.map(color => 
+          color.id === res.data.id ? res.data : color))
         setEditing(false);
         console.log(colorToEdit);
       })
       .catch(err => {
+        console.log(err, "Error updating the color")
         throw(err);
       })
       window.location.reload(false);
   };
 
-  const deleteColor = color => {
+  const deleteColor = (e, color) => {
     // make a delete request to delete this color
     if (window.confirm("Are you absolutely SURE you want to DELETE this color?")) {
-      updateColors(colors.filter(color => color.id !== color));
-
-      axiosWithAuth()
-        .delete(`/api/colors/${color}`)
-        .then(result => {
+      e.stopPropagation();
+      axios()
+        .delete(`/colors/${color.id}`)
+        .then(res => {
+          console.log(res)
+          updateColors(colors.filter(color => color.id !== color));
           console.log(
-            `Color number ${color} deleted`
+            `Color number ${color.id} deleted`
           )
         })
         .catch(err => {
+          console.log(err, "Error deleting the color")
           throw(err);
         })
         window.location.reload(false);
