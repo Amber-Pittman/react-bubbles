@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { axiosWithAuth as axios } from "../utils/axiosWithAuth";
+import React, { useState } from "react";
+import axiosWithAuth from "../utils/axiosWithAuth";
+import { useHistory } from "react-router-dom";
 
 const Login = (props) => {
   const [error, setError] = useState()
@@ -9,29 +10,24 @@ const Login = (props) => {
     password: "",
   })
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      props.history.push("/bubbles")
-    }
-  })
+  const history = useHistory();
 
   const handleChange = event => {
     setData({
       ...data,
       [event.target.name]: event.target.value,
-    })
-  }
+    });
+  };
 
   const handleSubmit = event => {
     event.preventDefault();
 
-    axios()
-      .post("http://localhost:5000/api/login", data)
+    axiosWithAuth()
+      .post("/login", data)
       .then(res => {
-        console.log(res)
+        console.log(res.data.payload)
         localStorage.setItem("token", res.data.payload)
-        props.history.push("/bubbles")
+        history.push("/protected");
       })
       .catch(err => {
         console.log(err, "Error in axiosWithAuth on Login")
@@ -44,7 +40,6 @@ const Login = (props) => {
     
   return (
     <div className="bubbleApp">
-      <h1>Welcome to the Bubble App!</h1>
         <div>
         <form onSubmit={handleSubmit}>
           {error && <div className="error">{error}</div>}
