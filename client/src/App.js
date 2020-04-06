@@ -10,7 +10,6 @@ export default function App() {
   return (
     <Router>
       <div className="App">
-        <h1>Welcome to the Bubbles App!</h1>
         <Switch>
           <Route exact path="/" component={Login} />
           <PrivateRoute exact path="/protected" component={BubblePage} />

@@ -41,6 +41,8 @@ const Login = (props) => {
   return (
     <div className="bubbleApp">
         <div>
+            
+        <h1>Welcome to the Bubbles App!</h1>
         <form onSubmit={handleSubmit}>
           {error && <div className="error">{error}</div>}
 
