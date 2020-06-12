@@ -1,43 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
-import "./styles.scss";
-
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import BubblePage from "./components/BubblePage";
-import getToken from "./utils/api";
+import "./styles.scss";
 
-function App() {
-  const signedIn = getToken();
+export default function App() {
 
   return (
-    
     <Router>
-      <div className="wrapper">
-        <nav>
-          <div>
-            <h2 className='bubbles'>Login for Color Bubbles</h2>
-          </div>
-          <div>
-            <Link to='/' className='link'>Home</Link>
-            
-            {/* #19 Add a SignIn Link to the Navigation */}
-            {!signedIn && <Link to='/' className='link'>Login</Link>}
-            
-            {/* #43 Add an Account Link to the Navigation */}
-            {signedIn && <Link to='/bubbles' className='link'> Bubbles</Link>}
-          </div>
-        </nav>
-
-        <Route exact path="/" component={Login} />
-        {/* 
-          Build a PrivateRoute component that will 
-          display BubblePage when you're authenticated 
-        */}
-        <PrivateRoute exact path="/bubbles" component={BubblePage} />
+      <div className="App">
+        <Switch>
+          <Route exact path="/" component={Login} />
+          <PrivateRoute exact path="/protected" component={BubblePage} />
+        </Switch>
       </div>
     </Router>
   );
 }
-
-export default App;

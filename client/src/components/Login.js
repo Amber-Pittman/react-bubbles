@@ -1,59 +1,82 @@
-import React, {useState} from "react";
-import api from "../utils/api";
+import React, { useState } from "react";
+import axiosWithAuth from "../utils/axiosWithAuth";
+import { useHistory } from "react-router-dom";
 
-function Login(props) {
+const Login = (props) => {
   const [error, setError] = useState()
 
-  const [data, setData] = useState({ 
-    email: "",
-		password: "",
+  const [data, setData] = useState({
+    username: "",
+    password: "",
   })
-  
-  const handleChange = (event) => {
-		setData({
-			...data, 
-			[event.target.name]: event.target.value,
-		})
-	}
 
-	const handleSubmit = (event) => {
-    event.preventDefault()
+  const history = useHistory();
+
+  const handleChange = event => {
+    setData({
+      ...data,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    axiosWithAuth()
+      .post("/login", data)
+      .then(res => {
+        console.log(res.data.payload)
+        localStorage.setItem("token", res.data.payload)
+        history.push("/protected");
+      })
+      .catch(err => {
+        console.log(err, "Error in axiosWithAuth on Login")
+        setError(err.res.data.message)
+      })
+  }
+
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
-    api()
-      .post("/api/login", data)
-      .then(result => {
-        localStorage.setItem("token", result.data.payload)
-
-        props.history.push("/bubbles")
-      })
-      .catch(error => {
-        setError(error.response.data.message)
-      })
-    }
-
+    
   return (
-      <form onSubmit={handleSubmit}>
-        {error && <div className="error">{error}</div>}
+    <div className="bubbleApp">
+        <div>
+            
+        <h1>Welcome to the Bubbles App!</h1>
+        <form onSubmit={handleSubmit}>
+          {error && <div className="error">{error}</div>}
 
-        <input 
-            type="text" 
-            autoComplete="username" 
-            name="username" 
-            placeholder="Username" 
-            value={data.username} 
-            onChange={handleChange} />
-        <input 
-            type="password" 
-            autoComplete="current-password" 
-            name="password" 
-            placeholder="Password" 
-            value={data.password} 
-            onChange={handleChange} />
-
-        <button type="submit">Sign In</button>
+          <div className="loginForm">
+          
+          <label> Username:
+            <input
+              type="text"
+              autoComplete="username"
+              name="username"
+              placeholder="Username" 
+              value={data.username}
+              onChange={handleChange}
+            />
+          </label>
+          
+          <label> Password: 
+            <input
+              type="password"
+              autoComplete="current-password"
+              name="password"
+              placeholder="Password" 
+              value={data.password}
+              onChange={handleChange}
+              />
+            </label>
+          
+          <button className="button" type="submit">Login</button>
+        
+        </div>
       </form>
-    );
+    </div>
+  </div>
+  );
 };
 
 export default Login;
